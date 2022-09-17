@@ -1,19 +1,93 @@
-const ac = document.querySelector(".ac")
-const pm = document.querySelector(".pm")
-const percent = document.querySelector(".percent")
-const division = document.querySelector(".division")
-const multiplication = document.querySelector(".multiplication")
-const addition = document.querySelector(".addition")
-const subtract = document.querySelector(".subtract")
-const equal = document.querySelector(".equal")
-const decimal = document.querySelector(".decimal")
-const number0 = document.querySelector(".number-0")
-const number1 = document.querySelector(".number-1")
-const number2 = document.querySelector(".number-2")
-const number3 = document.querySelector(".number-3")
-const number4 = document.querySelector(".number-4")
-const number5 = document.querySelector(".number-5")
-const number6 = document.querySelector(".number-6")
-const number7 = document.querySelector(".number-7")
-const number8 = document.querySelector(".number-8")
-const number9 = document.querySelector(".number-9")
+// When I click on a number, the primary display will show the value
+const primaryDisplay = document.querySelector('.primary-display');
+const secondaryDisplay = document.querySelector('.secondary-display');
+const buttons = document.querySelector('.buttons-container');
+
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('number')) {
+    if (primaryDisplay.textContent === '0') {
+      primaryDisplay.textContent = e.target.innerHTML;
+    } else {
+      primaryDisplay.textContent =
+        primaryDisplay.textContent + e.target.innerHTML;
+    }
+  }
+});
+
+// When I click on an operator, secondary display will show the value with the operator, and primary display will reset to 0
+
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('operator')) {
+    if (primaryDisplay.textContent !== '0') {
+      secondaryDisplay.textContent =
+        primaryDisplay.textContent + e.target.innerHTML;
+
+      primaryDisplay.textContent = 0;
+    }
+  }
+});
+
+// When I click on the equal button, primary display will show the result
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('equal')) {
+    let result = 0;
+    const value1 = Number(secondaryDisplay.textContent.replace(/[×+−÷]/g, ''));
+    const value2 = Number(primaryDisplay.textContent);
+    const operator = secondaryDisplay.textContent.replace(/[0-9.]/g, '');
+    switch (operator) {
+      case '+':
+        result = value1 + value2;
+        break;
+      case '−':
+        result = value1 - value2;
+        break;
+      case '×':
+        result = value1 * value2;
+        break;
+      case '÷':
+        result = value1 / value2;
+        break;
+    }
+    secondaryDisplay.textContent = result;
+    primaryDisplay.textContent = 0;
+  }
+});
+
+// When I click on AC button, calculator will reset
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('ac')) {
+    secondaryDisplay.textContent = '';
+    primaryDisplay.textContent = 0;
+  }
+});
+
+// When I click p/m button, it will switch p/m accordingly
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('pm')) {
+    if (!primaryDisplay.textContent.includes('-')) {
+      primaryDisplay.textContent = '-' + primaryDisplay.textContent;
+    } else {
+      primaryDisplay.textContent = primaryDisplay.textContent.replace(
+        /[-]/g,
+        ''
+      );
+    }
+  }
+});
+
+// When I click on percentage button, it will display the result on the secondary display
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('percent')) {
+    secondaryDisplay.textContent = primaryDisplay.textContent / 100;
+    primaryDisplay.textContent = 0;
+  }
+});
+
+// Show decimal point
+buttons.addEventListener('click', (e) => {
+  if (e.target.classList.contains('decimal')) {
+    if (!primaryDisplay.textContent.includes('.')) {
+      primaryDisplay.textContent = primaryDisplay.textContent + '.';
+    }
+  }
+});
